@@ -2,7 +2,7 @@
 	single linked list merge
 	This problem requires you to merge two ordered singly linked lists into one ordered singly linked list
 */
-// I AM NOT DONE
+
 
 use std::fmt::{self, Display, Formatter};
 use std::ptr::NonNull;
@@ -69,15 +69,43 @@ impl<T> LinkedList<T> {
             },
         }
     }
-	pub fn merge(list_a:LinkedList<T>,list_b:LinkedList<T>) -> Self
-	{
-		//TODO
-		Self {
-            length: 0,
-            start: None,
-            end: None,
+
+    // 合并两个列表
+    pub fn merge(list_a: LinkedList<T>, list_b: LinkedList<T>) -> Self
+    where
+        T: std::cmp::PartialOrd + Copy, // 确保 T 实现 PartialOrd 和 Copy
+    {
+        let mut merged_list = LinkedList::new();
+        let mut a = list_a.start;
+        let mut b = list_b.start;
+
+        while a.is_some() && b.is_some() {
+            let a_val = unsafe { (*a.unwrap().as_ptr()).val };
+            let b_val = unsafe { (*b.unwrap().as_ptr()).val };
+
+            if a_val <= b_val {
+                merged_list.add(a_val);
+                a = unsafe { (*a.unwrap().as_ptr()).next };
+            } else {
+                merged_list.add(b_val);
+                b = unsafe { (*b.unwrap().as_ptr()).next };
+            }
         }
-	}
+
+        while a.is_some() {
+            let a_val = unsafe { (*a.unwrap().as_ptr()).val };
+            merged_list.add(a_val);
+            a = unsafe { (*a.unwrap().as_ptr()).next };
+        }
+
+        while b.is_some() {
+            let b_val = unsafe { (*b.unwrap().as_ptr()).val };
+            merged_list.add(b_val);
+            b = unsafe { (*b.unwrap().as_ptr()).next };
+        }
+
+        merged_list
+    }
 }
 
 impl<T> Display for LinkedList<T>
@@ -135,7 +163,7 @@ mod tests {
 		let vec_a = vec![1,3,5,7];
 		let vec_b = vec![2,4,6,8];
 		let target_vec = vec![1,2,3,4,5,6,7,8];
-		
+
 		for i in 0..vec_a.len(){
 			list_a.add(vec_a[i]);
 		}
