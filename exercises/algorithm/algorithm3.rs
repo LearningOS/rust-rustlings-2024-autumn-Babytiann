@@ -3,11 +3,20 @@
 	This problem requires you to implement a sorting algorithm
 	you can use bubble sorting, insertion sorting, heap sorting, etc.
 */
-// I AM NOT DONE
 
-fn sort<T>(array: &mut [T]){
-	//TODO
+
+fn sort<T: Ord>(array: &mut [T]) {
+    let n = array.len();
+    for i in 0..n {
+        // 遍历数组，依次将最大的元素冒泡到末尾
+        for j in 0..n - 1 - i {
+            if array[j] > array[j + 1] {
+                array.swap(j, j + 1); // 交换相邻的元素
+            }
+        }
+    }
 }
+
 #[cfg(test)]
 mod tests {
     use super::*;
